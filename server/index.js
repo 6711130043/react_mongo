@@ -5,7 +5,7 @@ const app = express();
 app.use(cors());
 // �� connect MongoDB
 mongoose
-  .connect("mongodb://localhost:27017/mut")
+  .connect("mongodb://localhost:27017/MUT")
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.log(err));
 // �� Schema
