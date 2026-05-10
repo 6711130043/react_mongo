@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Modal, Button } from "react-bootstrap";
-
+import Swal from "sweetalert2";
 export default function App() {
   const [data, setData] = useState([]);
 
@@ -83,16 +83,35 @@ export default function App() {
 
       fetchData();
       setShowModal(false);
+      Swal.fire("Success!", "Employee saved successfully.", "success");
     } catch (err) {
       console.log(err);
+      Swal.fire("Error!", "Failed to save employee.", "error");
     }
   };
 
   // ✅ DELETE
   const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:5000/api/employees/${id}`);
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    });
 
-    fetchData();
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(`http://localhost:5000/api/employees/${id}`);
+        fetchData();
+        Swal.fire("Deleted!", "Employee has been deleted.", "success");
+      } catch (err) {
+        console.log(err);
+        Swal.fire("Error!", "Failed to delete employee.", "error");
+      }
+    }
   };
 
   // ✅ EDIT
