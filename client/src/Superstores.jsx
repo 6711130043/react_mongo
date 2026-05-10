@@ -9,24 +9,26 @@ export default function App() {
   useEffect(() => {
     fetchData();
   }, []);
+
   const fetchData = async () => {
-    const res = await axios.get("http://localhost:5000/api/employees");
+    const res = await axios.get("http://localhost:5000/api/superstores");
     setData(res.data);
   };
-  // �� Search
+  //  Search
   const filteredData = data.filter(
     (item) =>
-      item.name.toLowerCase().includes(search.toLowerCase()) ||
-      item.address.city.toLowerCase().includes(search.toLowerCase()),
+      item["Customer Name"].toLowerCase().includes(search.toLowerCase()) ||
+      item.City.toLowerCase().includes(search.toLowerCase()) ||
+      item.Sales.toString().includes(search),
   );
-  // �� Pagination
+  //  Pagination
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const start = (currentPage - 1) * itemsPerPage;
   const currentData = filteredData.slice(start, start + itemsPerPage);
   return (
     <div className="container mt-5">
-      <h2 className="text-center mb-4">Employee Data</h2>
-      {/* �� Search */}
+      <h2 className="text-center mb-4">Superstores Data</h2>
+      {/*  Search */}
       <div className="mb-3">
         <input
           type="text"
@@ -45,21 +47,25 @@ export default function App() {
           {" "}
           <thead className="table-dark">
             <tr>
-              <th>Name</th>
-              <th>Age</th>
+              <th>Order ID</th>
+              <th>Order Date</th>
+              <th>Customer ID</th>
+              <th>Customer Name</th>
               <th>City</th>
-              <th>Hobby</th>
-              <th>Tel</th>
+              <th>Country/Region</th>
+              <th>Sales</th>
             </tr>
           </thead>
           <tbody>
             {currentData.map((item, i) => (
               <tr key={i}>
-                <td>{item.name}</td>
-                <td>{item.age}</td>
-                <td>{item.address.city}</td>
-                <td>{item.hobby.join(", ")}</td>
-                <td>{item.tel.join(", ")}</td>
+                <td>{item["Order ID"]}</td>
+                <td>{item["Order Date"]}</td>
+                <td>{item["Customer ID"]}</td>
+                <td>{item["Customer Name"]}</td>
+                <td>{item.City}</td>
+                <td>{item["Country/Region"]}</td>
+                <td>{item.Sales}</td>
               </tr>
             ))}
           </tbody>
