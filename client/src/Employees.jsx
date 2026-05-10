@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button } from "react-bootstrap";
 
 export default function App() {
   const [data, setData] = useState([]);
@@ -110,6 +110,7 @@ export default function App() {
     });
 
     setEditId(item._id);
+    setShowModal(true);
   };
 
   // ✅ PAGINATION
@@ -131,86 +132,25 @@ export default function App() {
         </div>
       )}
 
-      {/* ✅ FORM */}
-      <div className="card p-4 shadow mb-4">
-        <div className="row g-3">
-          <div className="col-md-6">
-            <input
-              className="form-control"
-              placeholder="Name"
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="col-md-6">
-            <input
-              className="form-control"
-              placeholder="Age"
-              name="age"
-              value={form.age}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="col-md-4">
-            <input
-              className="form-control"
-              placeholder="Street"
-              name="street"
-              value={form.street}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="col-md-4">
-            <input
-              className="form-control"
-              placeholder="City"
-              name="city"
-              value={form.city}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="col-md-4">
-            <input
-              className="form-control"
-              placeholder="Zip"
-              name="zip"
-              value={form.zip}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="col-md-6">
-            <input
-              className="form-control"
-              placeholder="Hobby (comma separated)"
-              name="hobby"
-              value={form.hobby}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="col-md-6">
-            <input
-              className="form-control"
-              placeholder="Tel (comma separated)"
-              name="tel"
-              value={form.tel}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="col-md-12">
-            <button className="btn btn-primary w-100" onClick={handleSubmit}>
-              {editId ? "Update" : "Add"}
-            </button>
-          </div>
-        </div>
-      </div>
+      {/* ✅ ADD BUTTON */}
+      <button
+        className="btn btn-primary mb-4"
+        onClick={() => {
+          setEditId(null);
+          setForm({
+            name: "",
+            age: "",
+            street: "",
+            city: "",
+            zip: "",
+            hobby: "",
+            tel: "",
+          });
+          setShowModal(true);
+        }}
+      >
+        Add Employee
+      </button>
 
       {/* ✅ TABLE */}
       <div className="card shadow p-3">
@@ -301,6 +241,94 @@ export default function App() {
           </li>
         </ul>
       </nav>
+
+      {/* ✅ MODAL */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>{editId ? "Edit Employee" : "Add Employee"}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="row g-3">
+            <div className="col-md-6">
+              <input
+                className="form-control"
+                placeholder="Name"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="col-md-6">
+              <input
+                className="form-control"
+                placeholder="Age"
+                name="age"
+                value={form.age}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="col-md-4">
+              <input
+                className="form-control"
+                placeholder="Street"
+                name="street"
+                value={form.street}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="col-md-4">
+              <input
+                className="form-control"
+                placeholder="City"
+                name="city"
+                value={form.city}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="col-md-4">
+              <input
+                className="form-control"
+                placeholder="Zip"
+                name="zip"
+                value={form.zip}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="col-md-6">
+              <input
+                className="form-control"
+                placeholder="Hobby (comma separated)"
+                name="hobby"
+                value={form.hobby}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="col-md-6">
+              <input
+                className="form-control"
+                placeholder="Tel (comma separated)"
+                name="tel"
+                value={form.tel}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleSubmit}>
+            {editId ? "Update" : "Save"}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
