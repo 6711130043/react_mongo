@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
 app.use(cors());
+app.use(express.json());
 // �� connect MongoDB
 mongoose
   .connect("mongodb://localhost:27017/MUT")
@@ -81,6 +82,28 @@ app.get("/api/superstores", async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+// ✅ CREATE
+app.post("/api/employees", async (req, res) => {
+  const newData = new Employee(req.body);
+  console.log(newData);
+  await newData.save();
+  res.json(newData);
+});
+
+// ✅ UPDATE
+app.put("/api/employees/:id", async (req, res) => {
+  const updated = await Employee.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  res.json(updated);
+});
+
+// ✅ DELETE
+app.delete("/api/employees/:id", async (req, res) => {
+  await Employee.findByIdAndDelete(req.params.id);
+  res.json({ message: "Deleted" });
 });
 
 // ▶️ run server
