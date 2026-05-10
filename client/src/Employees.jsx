@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Navbar from "./Navbar";
+
 export default function App() {
   const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
@@ -25,84 +27,87 @@ export default function App() {
   const start = (currentPage - 1) * itemsPerPage;
   const currentData = filteredData.slice(start, start + itemsPerPage);
   return (
-    <div className="container mt-5">
-      <h2 className="text-center mb-4">Employee Data</h2>
-      {/*  Search */}
-      <div className="mb-3">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Search name or city..."
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setCurrentPage(1);
-          }}
-        />
-      </div>
-      {/*  Table */}
-      <div className="card shadow p-3">
-        <table className="table table-bordered table-striped">
-          {" "}
-          <thead className="table-dark">
-            <tr>
-              <th>Name</th>
-              <th>Age</th>
-              <th>City</th>
-              <th>Hobby</th>
-              <th>Tel</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentData.map((item, i) => (
-              <tr key={i}>
-                <td>{item.name}</td>
-                <td>{item.age}</td>
-                <td>{item.address.city}</td>
-                <td>{item.hobby.join(", ")}</td>
-                <td>{item.tel.join(", ")}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      {/*  Pagination */}
-      <nav className="mt-3">
-        <ul className="pagination justify-content-center">
-          <li className={`page-item ${currentPage === 1 && "disabled"}`}>
+    <>
+      <Navbar />
+      <div className="container mt-5">
+        <h2 className="text-center mb-4">Employee Data</h2>
+        {/*  Search */}
+        <div className="mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search name or city..."
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setCurrentPage(1);
+            }}
+          />
+        </div>
+        {/*  Table */}
+        <div className="card shadow p-3">
+          <table className="table table-bordered table-striped">
             {" "}
-            <button
-              className="page-link"
-              onClick={() => setCurrentPage(currentPage - 1)}
-            >
-              Prev
-            </button>
-          </li>
-          {[...Array(totalPages)].map((_, i) => (
+            <thead className="table-dark">
+              <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>City</th>
+                <th>Hobby</th>
+                <th>Tel</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentData.map((item, i) => (
+                <tr key={i}>
+                  <td>{item.name}</td>
+                  <td>{item.age}</td>
+                  <td>{item.address.city}</td>
+                  <td>{item.hobby.join(", ")}</td>
+                  <td>{item.tel.join(", ")}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {/*  Pagination */}
+        <nav className="mt-3">
+          <ul className="pagination justify-content-center">
+            <li className={`page-item ${currentPage === 1 && "disabled"}`}>
+              {" "}
+              <button
+                className="page-link"
+                onClick={() => setCurrentPage(currentPage - 1)}
+              >
+                Prev
+              </button>
+            </li>
+            {[...Array(totalPages)].map((_, i) => (
+              <li
+                key={i}
+                className={`page-item ${currentPage === i + 1 ? "active" : ""}`}
+              >
+                <button
+                  className="page-link"
+                  onClick={() => setCurrentPage(i + 1)}
+                >
+                  {i + 1}
+                </button>
+              </li>
+            ))}
             <li
-              key={i}
-              className={`page-item ${currentPage === i + 1 ? "active" : ""}`}
+              className={`page-item ${currentPage === totalPages && "disabled"}`}
             >
               <button
                 className="page-link"
-                onClick={() => setCurrentPage(i + 1)}
+                onClick={() => setCurrentPage(currentPage + 1)}
               >
-                {i + 1}
+                Next
               </button>
             </li>
-          ))}
-          <li
-            className={`page-item ${currentPage === totalPages && "disabled"}`}
-          >
-            <button
-              className="page-link"
-              onClick={() => setCurrentPage(currentPage + 1)}
-            >
-              Next
-            </button>
-          </li>
-        </ul>
-      </nav>
-    </div>
+          </ul>
+        </nav>
+      </div>
+    </>
   );
 }
