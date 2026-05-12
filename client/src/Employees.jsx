@@ -3,6 +3,7 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Modal, Button } from "react-bootstrap";
 import Swal from "sweetalert2";
+import Navbar from "./Navbar";
 export default function App() {
   const [data, setData] = useState([]);
 
@@ -140,214 +141,219 @@ export default function App() {
   const currentData = data.slice(startIndex, startIndex + itemsPerPage);
 
   return (
-    <div className="container mt-5">
-      <h2 className="mb-4 text-center">Employee CRUD</h2>
+    <>
+      <Navbar />
+      <div className="container mt-5">
+        <h2 className="mb-4 text-center">Employee CRUD</h2>
 
-      {/* ✅ first employee */}
-      {data.length > 0 && (
-        <div className="alert alert-info text-center">
-          First Employee:
-          <strong> {data[0].name}</strong>
-        </div>
-      )}
+        {/* ✅ first employee */}
+        {data.length > 0 && (
+          <div className="alert alert-info text-center">
+            First Employee:
+            <strong> {data[0].name}</strong>
+          </div>
+        )}
 
-      {/* ✅ ADD BUTTON */}
-      <button
-        className="btn btn-primary mb-4"
-        onClick={() => {
-          setEditId(null);
-          setForm({
-            name: "",
-            age: "",
-            street: "",
-            city: "",
-            zip: "",
-            hobby: "",
-            tel: "",
-          });
-          setShowModal(true);
-        }}
-      >
-        Add Employee
-      </button>
+        {/* ✅ ADD BUTTON */}
+        <button
+          className="btn btn-primary mb-4"
+          onClick={() => {
+            setEditId(null);
+            setForm({
+              name: "",
+              age: "",
+              street: "",
+              city: "",
+              zip: "",
+              hobby: "",
+              tel: "",
+            });
+            setShowModal(true);
+          }}
+        >
+          Add Employee
+        </button>
 
-      {/* ✅ TABLE */}
-      <div className="card shadow p-3">
-        <table className="table table-bordered table-striped">
-          <thead className="table-dark">
-            <tr>
-              <th>Name</th>
-              <th>Age</th>
-              <th>Address</th>
-              <th>Hobby</th>
-              <th>Tel</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {currentData.map((item) => (
-              <tr key={item._id}>
-                <td>{item.name}</td>
-
-                <td>{item.age}</td>
-
-                <td>
-                  {item.address?.street},{item.address?.city},
-                  {item.address?.zip}
-                </td>
-
-                <td>{item.hobby.join(", ")}</td>
-
-                <td>{item.tel.join(", ")}</td>
-
-                <td>
-                  <button
-                    className="btn btn-warning btn-sm me-2"
-                    onClick={() => handleEdit(item)}
-                  >
-                    Edit
-                  </button>
-
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => handleDelete(item._id)}
-                  >
-                    Delete
-                  </button>
-                </td>
+        {/* ✅ TABLE */}
+        <div className="card shadow p-3">
+          <table className="table table-bordered table-striped">
+            <thead className="table-dark">
+              <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Address</th>
+                <th>Hobby</th>
+                <th>Tel</th>
+                <th>Action</th>
               </tr>
+            </thead>
+
+            <tbody>
+              {currentData.map((item) => (
+                <tr key={item._id}>
+                  <td>{item.name}</td>
+
+                  <td>{item.age}</td>
+
+                  <td>
+                    {item.address?.street},{item.address?.city},
+                    {item.address?.zip}
+                  </td>
+
+                  <td>{item.hobby.join(", ")}</td>
+
+                  <td>{item.tel.join(", ")}</td>
+
+                  <td>
+                    <button
+                      className="btn btn-warning btn-sm me-2"
+                      onClick={() => handleEdit(item)}
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() => handleDelete(item._id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* ✅ PAGINATION */}
+        <nav className="mt-4">
+          <ul className="pagination justify-content-center">
+            <li className={`page-item ${currentPage === 1 && "disabled"}`}>
+              <button
+                className="page-link"
+                onClick={() => setCurrentPage(currentPage - 1)}
+              >
+                Prev
+              </button>
+            </li>
+
+            {[...Array(totalPages)].map((_, i) => (
+              <li
+                key={i}
+                className={`page-item ${currentPage === i + 1 ? "active" : ""}`}
+              >
+                <button
+                  className="page-link"
+                  onClick={() => setCurrentPage(i + 1)}
+                >
+                  {i + 1}
+                </button>
+              </li>
             ))}
-          </tbody>
-        </table>
-      </div>
 
-      {/* ✅ PAGINATION */}
-      <nav className="mt-4">
-        <ul className="pagination justify-content-center">
-          <li className={`page-item ${currentPage === 1 && "disabled"}`}>
-            <button
-              className="page-link"
-              onClick={() => setCurrentPage(currentPage - 1)}
-            >
-              Prev
-            </button>
-          </li>
-
-          {[...Array(totalPages)].map((_, i) => (
             <li
-              key={i}
-              className={`page-item ${currentPage === i + 1 ? "active" : ""}`}
+              className={`page-item ${currentPage === totalPages && "disabled"}`}
             >
               <button
                 className="page-link"
-                onClick={() => setCurrentPage(i + 1)}
+                onClick={() => setCurrentPage(currentPage + 1)}
               >
-                {i + 1}
+                Next
               </button>
             </li>
-          ))}
+          </ul>
+        </nav>
 
-          <li
-            className={`page-item ${currentPage === totalPages && "disabled"}`}
-          >
-            <button
-              className="page-link"
-              onClick={() => setCurrentPage(currentPage + 1)}
-            >
-              Next
-            </button>
-          </li>
-        </ul>
-      </nav>
+        {/* ✅ MODAL */}
+        <Modal show={showModal} onHide={() => setShowModal(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>
+              {editId ? "Edit Employee" : "Add Employee"}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="row g-3">
+              <div className="col-md-6">
+                <input
+                  className="form-control"
+                  placeholder="Name"
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                />
+              </div>
 
-      {/* ✅ MODAL */}
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>{editId ? "Edit Employee" : "Add Employee"}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="row g-3">
-            <div className="col-md-6">
-              <input
-                className="form-control"
-                placeholder="Name"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-              />
+              <div className="col-md-6">
+                <input
+                  className="form-control"
+                  placeholder="Age"
+                  name="age"
+                  value={form.age}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="col-md-4">
+                <input
+                  className="form-control"
+                  placeholder="Street"
+                  name="street"
+                  value={form.street}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="col-md-4">
+                <input
+                  className="form-control"
+                  placeholder="City"
+                  name="city"
+                  value={form.city}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="col-md-4">
+                <input
+                  className="form-control"
+                  placeholder="Zip"
+                  name="zip"
+                  value={form.zip}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="col-md-6">
+                <input
+                  className="form-control"
+                  placeholder="Hobby (comma separated)"
+                  name="hobby"
+                  value={form.hobby}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="col-md-6">
+                <input
+                  className="form-control"
+                  placeholder="Tel (comma separated)"
+                  name="tel"
+                  value={form.tel}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
-
-            <div className="col-md-6">
-              <input
-                className="form-control"
-                placeholder="Age"
-                name="age"
-                value={form.age}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="col-md-4">
-              <input
-                className="form-control"
-                placeholder="Street"
-                name="street"
-                value={form.street}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="col-md-4">
-              <input
-                className="form-control"
-                placeholder="City"
-                name="city"
-                value={form.city}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="col-md-4">
-              <input
-                className="form-control"
-                placeholder="Zip"
-                name="zip"
-                value={form.zip}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="col-md-6">
-              <input
-                className="form-control"
-                placeholder="Hobby (comma separated)"
-                name="hobby"
-                value={form.hobby}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="col-md-6">
-              <input
-                className="form-control"
-                placeholder="Tel (comma separated)"
-                name="tel"
-                value={form.tel}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleSubmit}>
-            {editId ? "Update" : "Save"}
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowModal(false)}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={handleSubmit}>
+              {editId ? "Update" : "Save"}
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
+    </>
   );
 }
